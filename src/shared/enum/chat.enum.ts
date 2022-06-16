@@ -1,0 +1,7 @@
+export enum CHAT_IDS {
+  JORGE_DUQUE_LEINARES = '573166291498-1424277590@g.us',
+  BLACKETE = '573164125998@c.us',
+  PAJA = '573102754623@c.us',
+}
+
+export const PERSON_DOMAIN = '@c.us';

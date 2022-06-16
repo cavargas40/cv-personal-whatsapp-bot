@@ -23,9 +23,9 @@ export class WhatsappBotService {
       this.logger.log('Client was logged out', reason);
     });
 
-    // this.client.on('message', async (msg) => {
-    //   this.logger.log({ where: 'message', msg });
-    // });
+    this.client.on('message_create', async (msg) => {
+      this.logger.log({ where: 'message', msg });
+    });
 
     this.client.on('ready', () => {
       this.ready = true;
@@ -45,10 +45,7 @@ export class WhatsappBotService {
       });
       this.client.sendMessage(chatId, message);
     } catch (error) {
-      this.logger.error(
-        { where: 'WhatsappBotService.sendMessage', error },
-        error.stack,
-      );
+      this.logger.error({ where: 'WhatsappBotService.sendMessage', error }, error.stack);
     }
   }
 }

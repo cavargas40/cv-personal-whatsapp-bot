@@ -2,6 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { DateTime } from 'luxon';
+import { CHAT_IDS, PERSON_DOMAIN } from 'src/shared/enum/chat.enum';
 import { WhatsappBotService } from 'src/whatsapp-bot/whatsapp-bot.service';
 
 @Injectable()
@@ -9,11 +10,6 @@ export class TaskSchedulerService {
   private readonly logger = new Logger(TaskSchedulerService.name);
 
   constructor(private whatsappService: WhatsappBotService) {}
-
-  private readonly CHAT_IDS = {
-    JORGE_DUQUE_LEINARES: '573166291498-1424277590@g.us',
-    BLACKETE: '573164125998@c.us',
-  };
 
   private readonly MESSAGES = {
     UMM_VIEJO_HP: this.getViejoHptaMessage,
@@ -37,12 +33,9 @@ export class TaskSchedulerService {
     return unity === 1 ? singular : plural;
   }
 
-  getBlacketeTimeDoingCSharpCourseMessage() {
-    const cSharpCouseGiftDate = DateTime.fromISO('2022-01-12T18:24:15.123');
-    const now = DateTime.now();
-
-    const years = +Math.abs(now.diff(cSharpCouseGiftDate, 'years').years).toFixed(2);
-    const months = +Math.abs(now.diff(cSharpCouseGiftDate, 'months').months).toFixed(0);
+  static calculateDateSectionsAccumulatedDiff(cSharpCouseGiftDate: DateTime) {
+    const years = +Math.abs(cSharpCouseGiftDate.diffNow('years').years).toFixed(2);
+    const months = +Math.abs(cSharpCouseGiftDate.diffNow('months').months).toFixed(0);
     const weeks = +Math.abs(+cSharpCouseGiftDate.diffNow('weeks').weeks).toFixed(0);
     const days = +Math.abs(+cSharpCouseGiftDate.diffNow('days').days).toFixed(0);
     const hours = +Math.abs(+cSharpCouseGiftDate.diffNow('hours').hours).toFixed(0);
@@ -91,10 +84,48 @@ export class TaskSchedulerService {
       'segundos',
     );
 
+    return {
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      yearsFormatted,
+      monthsFormatted,
+      weeksFormatted,
+      daysFormatted,
+      hoursFormatted,
+      minutesFormatted,
+      secondsFormatted,
+    }
+  }
+
+  getBlacketeTimeDoingCSharpCourseMessage() {
     const numberFormatter = new Intl.NumberFormat();
 
+    const cSharpCouseGiftDate = DateTime.fromISO('2022-01-12T18:24:15.123');
+
+    const {
+      years,
+      months,
+      weeks,
+      days,
+      hours,
+      minutes,
+      seconds,
+      yearsFormatted,
+      monthsFormatted,
+      weeksFormatted,
+      daysFormatted,
+      hoursFormatted,
+      minutesFormatted,
+      secondsFormatted,
+    } = TaskSchedulerService.calculateDateSectionsAccumulatedDiff(cSharpCouseGiftDate);
+
     return `
-      👴🏻 Blackete ctm 💃 
+      👴🏻 @${CHAT_IDS.BLACKETE.replace(PERSON_DOMAIN, '')} ctm 💃 
       Ya termino el curso de C#? 🤔
       Lleva en eso: 
       - ${numberFormatter.format(years)} ${yearsFormatted}
@@ -107,16 +138,16 @@ export class TaskSchedulerService {
       👨🏻‍💻 terminelo YA. LA RE PTM. 😡`;
   }
 
-  @Cron(CronExpression.EVERY_SECOND)
+  @Cron(CronExpression.EVERY_2_HOURS)
   handleCron() {
     const message = this.MESSAGES.BLACKETE_TIME_DOING_C_SHARP_COURSE();
 
     const delaySeconds = 5;
 
     setTimeout(() => {
-      this.whatsappService.sendMessage(this.CHAT_IDS.BLACKETE, message);
+      this.whatsappService.sendMessage(CHAT_IDS.BLACKETE, message.replace(CHAT_IDS.BLACKETE.replace(PERSON_DOMAIN, ''), 'Blackete'));
       this.whatsappService.sendMessage(
-        this.CHAT_IDS.JORGE_DUQUE_LEINARES,
+        CHAT_IDS.JORGE_DUQUE_LEINARES,
         message,
       );
     }, delaySeconds * 1000);

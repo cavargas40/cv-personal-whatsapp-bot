@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { WhatsappBotModule } from './whatsapp-bot/whatsapp-bot.module';
 import { TaskSchedulerModule } from './task-scheduler/task-scheduler.module';
-import { ApiLayerModule } from './api-layer/api-layer.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { ApiLayerModule } from './api-layer/api-layer.module';
     ScheduleModule.forRoot(),
     WhatsappBotModule,
     TaskSchedulerModule,
-    ApiLayerModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
