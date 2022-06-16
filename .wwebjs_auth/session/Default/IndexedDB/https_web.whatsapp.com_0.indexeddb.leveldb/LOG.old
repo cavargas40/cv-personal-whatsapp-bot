@@ -1,0 +1,14 @@
+2022/06/15-21:43:26.914 151e Reusing MANIFEST /home/cv/Projects/Personal/cv-what-sup-bot/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2022/06/15-21:43:26.915 151e Recovering log #3851
+2022/06/15-21:43:26.938 151e Reusing old log /home/cv/Projects/Personal/cv-what-sup-bot/.wwebjs_auth/session/Default/IndexedDB/https_web.whatsapp.com_0.indexeddb.leveldb/003851.log 
+2022/06/15-21:43:39.942 151d Level-0 table #3884: started
+2022/06/15-21:43:39.982 151d Level-0 table #3884: 1186733 bytes OK
+2022/06/15-21:43:39.989 151d Delete type=0 #3851
+2022/06/15-21:43:50.049 151e Compacting 1@0 + 0@1 files
+2022/06/15-21:43:50.073 151e Generated table #3885@0: 19185 keys, 465410 bytes
+2022/06/15-21:43:50.086 151e Generated table #3886@0: 52 keys, 8493 bytes
+2022/06/15-21:43:50.107 151e Generated table #3887@0: 409 keys, 18448 bytes
+2022/06/15-21:43:50.118 151e Generated table #3888@0: 202 keys, 3920 bytes
+2022/06/15-21:43:50.118 151e Compacted 1@0 + 0@1 files => 496271 bytes
+2022/06/15-21:43:50.126 151e compacted to: files[ 0 4 47 0 0 0 0 ]
+2022/06/15-21:43:50.127 151e Delete type=2 #3884
