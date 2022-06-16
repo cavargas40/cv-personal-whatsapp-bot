@@ -1,5 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { Client, LocalAuth } from 'whatsapp-web.js';
+import { CHAT_IDS, PERSON_DOMAIN } from 'src/shared/enum/chat.enum';
+import { Client, LocalAuth, Message } from 'whatsapp-web.js';
+import { ChatService } from './chat/chat.service';
 
 @Injectable()
 export class WhatsappBotService {
@@ -7,7 +9,7 @@ export class WhatsappBotService {
   private client: Client;
   private ready = false;
 
-  constructor() {
+  constructor(private chatService: ChatService) {
     this.client = new Client({
       authStrategy: new LocalAuth(),
       puppeteer: { headless: false },
@@ -23,8 +25,8 @@ export class WhatsappBotService {
       this.logger.log('Client was logged out', reason);
     });
 
-    this.client.on('message_create', async (msg) => {
-      this.logger.log({ where: 'message', msg });
+    this.client.on('message', async (message) => {
+      this.handleIncomingMessage(message);
     });
 
     this.client.on('ready', () => {
@@ -46,6 +48,22 @@ export class WhatsappBotService {
       this.client.sendMessage(chatId, message);
     } catch (error) {
       this.logger.error({ where: 'WhatsappBotService.sendMessage', error }, error.stack);
+    }
+  }
+
+  handleIncomingMessage(message: Message) {
+    if (!this.chatService.isTextMessage(message)) {
+      return;
+    }
+
+    // Blackete ctm 💃
+    if (this.chatService.isMessageFromBlackete(message) && this.chatService.isStupidBlacketeMessage(message)) {
+      const responseMessage = this.chatService.getBlacketeTimeDoingCSharpCourseMessage();
+      this.sendMessage(CHAT_IDS.JORGE_DUQUE_LEINARES, responseMessage);
+      this.sendMessage(
+        CHAT_IDS.BLACKETE,
+        responseMessage.replace(CHAT_IDS.BLACKETE.replace(PERSON_DOMAIN, ''), 'Blackete'),
+      );
     }
   }
 }
