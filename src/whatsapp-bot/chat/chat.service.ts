@@ -94,8 +94,24 @@ export class ChatService {
       👨🏻‍💻 terminelo YA. LA RE PTM. 😡`;
   }
 
-  isMessageFromBlackete(message: Message): boolean {
+  isBlacketeMessage(message: Message): boolean {
     return message.author === CHAT_IDS.BLACKETE;
+  }
+
+  isMiloMessage(message: Message): boolean {
+    return message.from === CHAT_IDS.MILO;
+  }
+
+  isNeilMessage(message: Message): boolean {
+    return message.author === CHAT_IDS.NEIL;
+  }
+
+  isPingMessage(message: Message): boolean {
+    return message.body.toLowerCase().trim().replace(' ', '') === 'ping';
+  }
+
+  isJorgeDuqueLeinaresMessage(message: Message): boolean {
+    return message.from === CHAT_IDS.JORGE_DUQUE_LEINARES;
   }
 
   isStupidBlacketeMessage(message: Message): boolean {

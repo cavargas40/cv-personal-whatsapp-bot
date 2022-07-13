@@ -2,12 +2,14 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CHAT_IDS, PERSON_DOMAIN } from 'src/shared/enum/chat.enum';
 import { Client, LocalAuth, Message } from 'whatsapp-web.js';
 import { ChatService } from './chat/chat.service';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class WhatsappBotService {
   private readonly logger = new Logger(WhatsappBotService.name);
   private client: Client;
   private ready = false;
+  private lastNeilMessageTime: DateTime = null;
 
   constructor(private chatService: ChatService) {
     this.client = new Client({
@@ -41,7 +43,6 @@ export class WhatsappBotService {
         return;
       }
       this.logger.log({
-        where: 'WhatsappBotService.sendMessage',
         chatId,
         message,
       });
@@ -51,18 +52,41 @@ export class WhatsappBotService {
     }
   }
 
+  generateRandomNumber(maxNumber: number) {
+    return +(Math.random() * maxNumber).toFixed(0);
+  }
+
   handleIncomingMessage(message: Message) {
     if (!this.chatService.isTextMessage(message)) {
       return;
     }
 
     // Blackete ctm 💃
-    if (this.chatService.isMessageFromBlackete(message) && this.chatService.isStupidBlacketeMessage(message)) {
+    if (this.chatService.isBlacketeMessage(message) && this.chatService.isStupidBlacketeMessage(message)) {
       const responseMessage = this.chatService.getBlacketeTimeDoingCSharpCourseMessage();
       this.sendMessage(CHAT_IDS.JORGE_DUQUE_LEINARES, responseMessage);
       this.sendMessage(
         CHAT_IDS.BLACKETE,
         responseMessage.replace(CHAT_IDS.BLACKETE.replace(PERSON_DOMAIN, ''), 'Blackete'),
+      );
+    }
+
+    // Milo
+    if (this.chatService.isMiloMessage(message) && this.chatService.isPingMessage(message)) {
+      this.sendMessage(CHAT_IDS.MILO, 'Miiiiilo vamos a luna lunera pspspspspsps');
+    }
+
+    // Neil
+    if (this.chatService.isJorgeDuqueLeinaresMessage(message) && this.chatService.isNeilMessage(message)) {
+      const hoursToWait = 1;
+      if (this.lastNeilMessageTime && this.lastNeilMessageTime.diffNow('hours').hours < hoursToWait) {
+        return;
+      }
+
+      this.lastNeilMessageTime = DateTime.now();
+      this.sendMessage(
+        CHAT_IDS.JORGE_DUQUE_LEINARES,
+        `Pe${'e'.repeat(this.generateRandomNumber(20))}ro N${'e'.repeat(this.generateRandomNumber(10))}eil`,
       );
     }
   }
